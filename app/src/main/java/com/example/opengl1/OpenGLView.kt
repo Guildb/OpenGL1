@@ -3,7 +3,6 @@ package com.example.opengl1
 import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.opengl.GLUtils
 import android.util.AttributeSet
 import android.util.Log
 import freemap.openglwrapper.Camera
@@ -46,8 +45,8 @@ class OpenGLView(ctx: Context, aSet: AttributeSet)  :GLSurfaceView(ctx, aSet), G
     val rotationMatrix = GLMatrix()
 
     // creating the 2 cubes variables
-    val cube1 = Cube(3f,0f,0f)
-    val cube2 = Cube(-3f,0f,0f)
+    val cube1 = Cube(1f,0f,0f)
+    val cube2 = Cube(-1f,0f,0f)
 
 
 
@@ -114,10 +113,13 @@ class OpenGLView(ctx: Context, aSet: AttributeSet)  :GLSurfaceView(ctx, aSet), G
 
         // Only run code if buffer is not null
         fbuf?.apply{
-            val ref_aVertex = gpu.getAttribLocation("aVertex")
-            val ref_uColour = gpu.getUniformLocation("uColour")
-            val ref_uViewMatrix = gpu.getUniformLocation("uView")
-            val ref_uProjMatrix = gpu.getUniformLocation("uProj")
+            //val ref_aVertex = gpu.getAttribLocation("aVertex")
+            //val ref_uColour = gpu.getUniformLocation("uColour")
+            val ref_uViewMatrix = gpu.getUniformLocation("uMvMtx")
+            val ref_uProjMatrix = gpu.getUniformLocation("uPerspMtx")
+
+            val attrVarRef= gpu.getAttribLocation("aVertex")
+            val colourVarRef = gpu.getAttribLocation("aColour")
 
             //reset the view matrix to the identity matrix
             viewMatrix.setAsIdentityMatrix()
@@ -158,11 +160,8 @@ class OpenGLView(ctx: Context, aSet: AttributeSet)  :GLSurfaceView(ctx, aSet), G
 
             //code to call the cube class to draw a cube
 
-            gpu.setUniform4FloatArray(ref_uColour, red)
-            cube1.render(gpu, ref_aVertex)
-
-            //gpu.setUniform4FloatArray(ref_uColour, yellow)
-            //cube2.render(gpu, ref_aVertex)
+            cube1.render(gpu, attrVarRef, colourVarRef)
+            cube2.render(gpu, attrVarRef, colourVarRef)
         }
     }
 

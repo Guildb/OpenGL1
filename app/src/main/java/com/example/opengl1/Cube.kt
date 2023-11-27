@@ -13,14 +13,14 @@ class Cube(val x: Float, val y:Float, val z:Float) {
 
         vertexBuf = OpenGLUtils.makeFloatBuffer(
             floatArrayOf(
-                x, y + 0.5f, z,
-                x + 0.5f, y + 0.5f, z,
-                x + 0.5f, y + 0.5f, z + 0.5f,
-                x, y + 0.5f, z + 0.5f,
-                x, y, z,
-                x + 0.5f, y, z,
-                x + 0.5f, y, z + 0.5f,
-                x, y, z + 0.5f,
+                x,          y + 0.5f,   z,          1f,0f,0f,
+                x + 0.5f,   y + 0.5f,   z,          0f,1f,0f,
+                x + 0.5f,   y + 0.5f,   z + 0.5f,   0f,0f,1f,
+                x,          y + 0.5f,   z + 0.5f,   1f,1f,0f,
+                x,          y,          z,          0f,1f,1f,
+                x + 0.5f,   y,          z,          1f,0f,1f,
+                x + 0.5f,   y,          z + 0.5f,   1f,1f,1f,
+                x,          y,          z + 0.5f,   1f,0.5f,0f
             )
         )
         indexBuffer = OpenGLUtils.makeShortBuffer(
@@ -35,7 +35,9 @@ class Cube(val x: Float, val y:Float, val z:Float) {
         )
     }
 
-    fun render(gpu: GPUInterface, aVertex: Int ){
-        gpu.drawIndexedBufferedData(vertexBuf,indexBuffer, 0, aVertex)
+    fun render(gpu: GPUInterface, aVertex: Int, aColour:Int ){
+        gpu.specifyBufferedDataFormat(aVertex, vertexBuf, 24, 0)
+        gpu.specifyBufferedDataFormat(aColour, vertexBuf, 24, 3)
+        gpu.drawElements(indexBuffer)
     }
 }
